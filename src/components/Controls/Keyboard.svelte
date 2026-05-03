@@ -1,8 +1,9 @@
 <script>
-	import { userGrid } from '@sudoku/stores/grid';
 	import { cursor } from '@sudoku/stores/cursor';
 	import { notes } from '@sudoku/stores/notes';
 	import { candidates } from '@sudoku/stores/candidates';
+	import { userGrid } from '@sudoku/stores/grid';
+	import { undo, redo } from '@sudoku/game';
 
 	// TODO: Improve keyboardDisabled
 	import { keyboardDisabled } from '@sudoku/stores/keyboard';
@@ -27,6 +28,21 @@
 	}
 
 	function handleKey(e) {
+		if ((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+			e.preventDefault();
+			undo();
+			return;
+		}
+
+		if (
+			(e.ctrlKey || e.metaKey) &&
+			(e.key === 'y' || e.key === 'Y' || (e.shiftKey && (e.key === 'z' || e.key === 'Z')))
+		) {
+			e.preventDefault();
+			redo();
+			return;
+		}
+
 		switch (e.key || e.keyCode) {
 			case 'ArrowUp':
 			case 38:
